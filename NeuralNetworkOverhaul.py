@@ -35,9 +35,11 @@ class Layer:
         self.__nextLayer.calculateActivations(np.dot(self.weights, self.neurons))
     
     def evolve(self, weightsBaseline, biasBaseline, change):
+        z = 0
         for i in range(self.size):
             for j in range(self.__nextLayer.size):
                 self.weights[j][i] = weightsBaseline[j][i] + random.uniform((change*-1), change)
+                z += 1
             self.biases[i] = biasBaseline[i] + random.uniform((change*-1), change)
 
 class Input_Layer(Layer):

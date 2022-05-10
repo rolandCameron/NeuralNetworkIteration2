@@ -11,6 +11,8 @@ numLayers = 0
 layerWidth = 0
 neuronRadii = []
 
+listColours = []
+
 def initialise(NeuralNetwork, screenDimensions):
     global numLayers
     global layerWidth
@@ -87,10 +89,11 @@ def visualise(NeuralNetwork, activeColour, inactiveColour, surface):
 
             pygame.draw.circle(surface, activationAdjustedColour, (layerX, (j + 1)*neuronRadii[i]*2), (neuronRadii[i]*0.9))
 
-            if NeuralNetwork[i].type != "output":
-                for k in range(NeuralNetwork[i].size):
-                    for l in range(NeuralNetwork[i+1].size):
-                        weight = NeuralNetwork[i].weights[l][k]
-                        weight = 1/(1+math.e ** -weight)
-                        weightAdjustedColour = colourBetween(activeColour, inactiveColour, weight)
-                        pygame.draw.aaline(surface, weightAdjustedColour, (layerX + neuronRadii[i], (j + 1)*neuronRadii[i]*2), (nextLayerX - neuronRadii[i + 1], (l + 1)*neuronRadii[i + 1]*2))
+        if NeuralNetwork[i].type != "output":
+            for k in range(NeuralNetwork[i].size):
+                for l in range(NeuralNetwork[i+1].size):
+                    weight = NeuralNetwork[i].weights[l][k]
+                    weight = 1/(1+math.e ** -weight)
+                    weightAdjustedColour = colourBetween(activeColour, inactiveColour, weight)
+                    listColours.append(weightAdjustedColour)
+                    pygame.draw.line(surface, weightAdjustedColour, (layerX + neuronRadii[i], (k + 1)*neuronRadii[i]*2), (nextLayerX - neuronRadii[i + 1], (l + 1)*neuronRadii[i + 1]*2), width = int(math.ceil(neuronRadii[i]*0.1)))
