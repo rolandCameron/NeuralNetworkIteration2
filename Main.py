@@ -37,16 +37,16 @@ y = 0
 
 # Game loop.
 while True: 
-    if x == 5:
+    if x == 60:
         x = 0
-        screen.fill((0, 0, 0))  
+        screen.fill((0, 0, 0))
         neuralNetwork[0].calculateActivations(np.array([random.randint(-10, 10) for i in range(neuralNetwork[0].size)]))
         for i in range(networkLen - 1):
             neuralNetwork[i].propogate()
-        Vis.visualise(neuralNetwork, (255,192,203), (255, 165, 0), screen)
+        Vis.visualise(neuralNetwork, (255,192,203), (255, 165, 0), pygame.mouse.get_pos(), screen)
 
         if y == 5:
-            y=0
+            y = 0
             for i in range(networkLen - 1):
                 neuralNetwork[i].initWeights(neuralNetwork[i + 1])
                 neuralNetwork[i].evolve(neuralNetwork[i].weights, neuralNetwork[i].biases, 5)

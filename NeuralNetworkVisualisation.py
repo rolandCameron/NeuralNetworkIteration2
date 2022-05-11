@@ -6,17 +6,28 @@ pygame.init()
 global numLayers
 global layerWidth
 global neuronRadii
+global maxX
+global maxY
 
+maxX = 0
+maxY = 0
 numLayers = 0
 layerWidth = 0
 neuronRadii = []
 
 listColours = []
 
+font = pygame.font.Font('freesansbold.ttf', 32)
+
 def initialise(NeuralNetwork, screenDimensions):
     global numLayers
     global layerWidth
     global neuronRadii
+    global maxX
+    global maxY
+
+    maxX = screenDimensions[0]
+    maxY = screenDimensions[1]
 
     screenX, screenY = screenDimensions[0], screenDimensions[1]
     numLayers = len(NeuralNetwork)
@@ -74,11 +85,25 @@ def colourBetween(colourOne, colourTwo, mix):
 
     return srgbBlend
 
-def visualise(NeuralNetwork, activeColour, inactiveColour, surface):
+def displayStatistics(NeuralNetwork, mousePos, surface):
+    for i in range(numLayers):
+        layerX = layerWidth*(i+1)
+        if mousePos[0] > layerX - neuronRadii[i] and mousePos[0] < layerX + neuronRadii[i]:
+            for j in range(NeuralNetwork[i].size):
+                if mousePos[1] > neuronRadii[i]*2*(j) and mousePos[1] < neuronRadii[i]*2*(j + 1):
+                    activation = round(NeuralNetwork[i].neurons[j], 3)
+                    bias = NeuralNetwork[i].biases[j]
+                    text = font.render(f'Activation: {activation}, Bias: {bias}', True, (255, 255, 255))
+                    xSize, ySize = font.size(f'Activation: {activation}, Bias: {bias}')
+                    surface.blit(text, ((maxX - xSize*1.1), (maxY - ySize*1.1)))
+
+def visualise(NeuralNetwork, activeColour, inactiveColour, mousePos, surface):
     networkActivations = []
     for i in range(numLayers):
         networkActivations.append(NeuralNetwork[i].returnActivations())
     
+    displayStatistics(NeuralNetwork, mousePos, surface)
+
     for i in range(numLayers):
         layerX = layerWidth*(i+1)
         nextLayerX = layerWidth*(i+2)
